@@ -1,19 +1,26 @@
-name: Clippy
+# .github/workflows/lint.yml
 
-on: [push, pull_request]
+name: Rust Linting
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: clippy, rustfmt
-          override: true
-      - name: Run clippy
-        run: make lint
-  
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: clippy
+
+    - name: Run Clippy
+      run: cargo clippy -- -D warnings
